@@ -73,7 +73,10 @@ function isArmstrong(n) {
 }
 
 function getDigitSum(n) {
-    return n.toString().split('').reduce((sum, d) => sum + parseInt(d), 0);
+    return Math.abs(n) // Convert negative to positive
+        .toString()
+        .split('')
+        .reduce((sum, d) => sum + parseInt(d, 10), 0);
 }
 
 async function getFunFact(n) {
