@@ -1,13 +1,14 @@
 
 const express = require('express');
+const axios = require('axios');
 const app = express();
 const port = 3000;
 
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "\*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
-});
+    });
 
 app.get('/api/classify-number', async (req, res) => {
     const num = req.query.number;
@@ -15,7 +16,7 @@ app.get('/api/classify-number', async (req, res) => {
         return res.status(400).json({ number: "alphabet", error: true });
     }
 
-    const number = parseInt(num, 10);
+    const number = parseInt(num);
     const properties = getMathProperties(number);
     const funFact = await getFunFact(number);
 
@@ -72,15 +73,13 @@ function isArmstrong(n) {
 }
 
 function getDigitSum(n) {
-    return n.toString().split('').reduce((sum, d) => sum + parseInt(d, 10), 0);
+    return n.toString().split('').reduce((sum, d) => sum + parseInt(d), 0);
 }
 
 async function getFunFact(n) {
     try {
-        const fetch = (await import('node-fetch')).default;
-        const response = await fetch(`http://numbersapi.com/${n}`);
-        const text = await response.text();
-        return text;
+        const response = await axios.get(`http://numbersapi.com/${n}`);
+        return response.data;
     } catch (error) {
         return `Could not fetch a fun fact for ${n}.`;
     }
