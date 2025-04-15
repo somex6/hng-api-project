@@ -61,7 +61,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"docker\", instance=~\"$host\", container_label_com_docker_swarm_service_name=~\"$service\"}",
+          "expr": "{job=\"docker\", instance=~\"$host\", container_name=~\"$service\"}",
           "refId": "A"
         }
       ],
@@ -109,7 +109,7 @@
       },
       "targets": [
         {
-          "expr": "{job=\"docker\", instance=~\"$host\", container_label_com_docker_swarm_service_name=~\"$service\"} |= \"error\" |~ \"(?i)exception|fail|crash\"",
+          "expr": "{job=\"docker\", instance=~\"$host\", container_name=~\"$service\"} |= \"error\" |~ \"(?i)exception|fail|crash\"",
           "refId": "A"
         }
       ],
@@ -165,12 +165,12 @@
       },
       "targets": [
         {
-          "expr": "sum(rate({job=\"docker\", instance=~\"$host\", container_label_com_docker_swarm_service_name=~\"$service\"}[5m])) by (container_label_com_docker_swarm_service_name)",
-          "legendFormat": "{{container_label_com_docker_swarm_service_name}}",
+          "expr": "sum(rate({job=\"docker\", instance=~\"$host\", container_name=~\"$service\"}[5m])) by (container_name)",
+          "legendFormat": "{{container_name}}",
           "refId": "A"
         }
       ],
-      "title": "Log Volume by Service",
+      "title": "Log Volume by Container",
       "type": "timeseries"
     }
   ],
@@ -240,15 +240,15 @@
           "type": "loki",
           "uid": "${datasource}"
         },
-        "definition": "label_values({job=\"docker\", instance=~\"$host\"}, container_label_com_docker_swarm_service_name)",
+        "definition": "label_values({job=\"docker\", instance=~\"$host\"}, container_name)",
         "hide": 0,
         "includeAll": true,
-        "label": "Service",
+        "label": "Container",
         "multi": false,
         "name": "service",
         "options": [],
         "query": {
-          "query": "label_values({job=\"docker\", instance=~\"$host\"}, container_label_com_docker_swarm_service_name)",
+          "query": "label_values({job=\"docker\", instance=~\"$host\"}, container_name)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -289,6 +289,6 @@
   "timezone": "",
   "title": "Docker Swarm Log Viewer",
   "uid": "docker-swarm-loki-logs",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
