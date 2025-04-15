@@ -12,7 +12,7 @@
       }
     ]
   },
-  "description": "Log Viewer Dashboard for Docker Swarm using Loki",
+  "description": "Simple Log Viewer Dashboard for Docker Swarm using Loki",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
@@ -34,7 +34,7 @@
       },
       "id": 1,
       "panels": [],
-      "title": "Logs Overview",
+      "title": "Logs",
       "type": "row"
     },
     {
@@ -61,29 +61,12 @@
       },
       "targets": [
         {
-          "expr": "{job=\"docker\", instance=~\"$host\", container_name=~\"$service\"}",
+          "expr": "{container_name=~\"$container\"}",
           "refId": "A"
         }
       ],
-      "title": "All Container Logs",
+      "title": "All Logs",
       "type": "logs"
-    },
-    {
-      "collapsed": false,
-      "datasource": {
-        "type": "loki",
-        "uid": "${datasource}"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 11
-      },
-      "id": 3,
-      "panels": [],
-      "title": "Error Logs",
-      "type": "row"
     },
     {
       "datasource": {
@@ -94,9 +77,9 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 11
       },
-      "id": 4,
+      "id": 3,
       "options": {
         "dedupStrategy": "none",
         "enableLogDetails": true,
@@ -109,29 +92,12 @@
       },
       "targets": [
         {
-          "expr": "{job=\"docker\", instance=~\"$host\", container_name=~\"$service\"} |= \"error\" |~ \"(?i)exception|fail|crash\"",
+          "expr": "{container_name=~\"$container\"} |= \"error\" |~ \"(?i)exception|fail|crash\"",
           "refId": "A"
         }
       ],
       "title": "Error Logs",
       "type": "logs"
-    },
-    {
-      "collapsed": false,
-      "datasource": {
-        "type": "loki",
-        "uid": "${datasource}"
-      },
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 22
-      },
-      "id": 5,
-      "panels": [],
-      "title": "Log Volume",
-      "type": "row"
     },
     {
       "datasource": {
@@ -148,9 +114,9 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 21
       },
-      "id": 6,
+      "id": 4,
       "options": {
         "legend": {
           "calcs": ["mean", "max"],
@@ -165,7 +131,7 @@
       },
       "targets": [
         {
-          "expr": "sum(rate({job=\"docker\", instance=~\"$host\", container_name=~\"$service\"}[5m])) by (container_name)",
+          "expr": "sum(rate({container_name=~\"$container\"}[5m])) by (container_name)",
           "legendFormat": "{{container_name}}",
           "refId": "A"
         }
@@ -212,43 +178,15 @@
           "type": "loki",
           "uid": "${datasource}"
         },
-        "definition": "label_values({job=\"docker\"}, instance)",
-        "hide": 0,
-        "includeAll": true,
-        "label": "Host",
-        "multi": false,
-        "name": "host",
-        "options": [],
-        "query": {
-          "query": "label_values({job=\"docker\"}, instance)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "skipUrlSync": false,
-        "sort": 5,
-        "type": "query"
-      },
-      {
-        "allValue": ".*",
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": {
-          "type": "loki",
-          "uid": "${datasource}"
-        },
-        "definition": "label_values({job=\"docker\", instance=~\"$host\"}, container_name)",
+        "definition": "label_values({}, container_name)",
         "hide": 0,
         "includeAll": true,
         "label": "Container",
         "multi": false,
-        "name": "service",
+        "name": "container",
         "options": [],
         "query": {
-          "query": "label_values({job=\"docker\", instance=~\"$host\"}, container_name)",
+          "query": "label_values({}, container_name)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -287,8 +225,8 @@
     ]
   },
   "timezone": "",
-  "title": "Docker Swarm Log Viewer",
-  "uid": "docker-swarm-loki-logs",
-  "version": 2,
+  "title": "Docker Swarm Simple Log Viewer",
+  "uid": "docker-swarm-loki-simple-logs",
+  "version": 1,
   "weekStart": ""
 }
